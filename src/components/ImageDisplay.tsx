@@ -149,9 +149,9 @@ const ImageGallery = (props: ImageGalleryProps) => {
 
     return(
         <GalleryContainer>
-            <GalleryButton left={true} src={LessThan} onClick={prevElement}/>
+            {(current - 1) >= 0 && <GalleryButton left={true} src={LessThan} onClick={prevElement}/>}
             <GalleryImage src={getImageAtIndex(current)}/>
-            <GalleryButton left={false} src={GreaterThan} onClick={nextElement}/>
+            {(current + 1) < props.images.length &&<GalleryButton left={false} src={GreaterThan} onClick={nextElement}/>}
             <AbortButton src={Abort} left={false} onClick={closeGallery}/>
         </GalleryContainer>
     );
