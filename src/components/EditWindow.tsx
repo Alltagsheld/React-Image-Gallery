@@ -102,7 +102,6 @@ export const EditWindow = (props: EditWindowProps) => {
 
     const submit = () => {
         uploadImage(props.image.path);
-        console.log("image uploaded");
         if(props.closePopup)props.closePopup();
     }
 
@@ -144,7 +143,6 @@ type HashTagProps = {
     color?: string;
 }
 export const HashTags = (props: HashTagProps) => {
-    console.log(props.value);
     return (
         <HashTagLabel color={props.color}>
             <Text color="white">{props.value}</Text>

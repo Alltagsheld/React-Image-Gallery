@@ -21,7 +21,7 @@ const Background = styled.div<{long: boolean, wide: boolean}>`
     &:hover{
         opacity: 0.7;
     }
-    box-shadow: 0 0 3px 3px rgba(255, 255, 255, 0.404);
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 1));
 `;
 
 const BoxedImage = (props: BoxedImageProps) => {
@@ -32,15 +32,11 @@ const BoxedImage = (props: BoxedImageProps) => {
     useEffect(() => {
         const img = new Image();
         img.onload = () => {
-            console.log("widht: " + img.width + " height: " + img.height)
             if(img.width > img.height){
-                
                 SIZES.splice(SIZES.indexOf("long"), 1);
-                console.log("removed long, SIZES is now " + SIZES);
             }
             else{
                 SIZES.splice(SIZES.indexOf("wide"), 1);
-                console.log("removed wide, SIZES is now " + SIZES);
             }
             choseRandomSize();
         }
@@ -48,7 +44,6 @@ const BoxedImage = (props: BoxedImageProps) => {
     }, [])
 
     const choseRandomSize = () => {
-        console.log("in choseRandomSize, size is: " +SIZES);
         const random = Math.floor(Math.random() * SIZES.length);
         if(SIZES[random] === "long"){
             setWide(false);

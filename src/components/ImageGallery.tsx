@@ -4,6 +4,7 @@ import Abort from '../icons/x-red.png';
 import { useEffect, useState } from "react";
 import LessThan from './../icons/lessThan.png';
 import GreaterThanWhite from './../icons/greaterThanWhite.png';
+import Trash from './../icons/Trash.png';
 import { ImageWithTag } from "../pages/LandingPage";
 import Comment from './../icons/comment.png';
 import InformationWindow from "./InformationWindow";
@@ -29,9 +30,9 @@ const GalleryImage = styled.img<{previewMode: boolean}>`
     object-fit: contain;
     height: ${props => props.previewMode ? "auto" : "85vh"};
     max-height: ${props => props.previewMode ? "85vh" : "auto"};
-    max-width: ${props => props.previewMode ? "85%" : "100%%"};
+    max-width: ${props => props.previewMode ? "85%" : "100%"};
     z-index: 2;
-    box-shadow: 0 0 3px 3px rgba(255, 255, 255, 0.404);
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.800));
 `;
 
 const GalleryButton = styled.img<{left: boolean}>`
@@ -71,15 +72,21 @@ const InfoButton = styled(AbortButton)`
     transform: translate(0, 0);
 `;
 
+const DeleteButton = styled(AbortButton)`
+    width: 35px;
+    height: 35px;
+    left: 0;
+`;
+
 type ImageGalleryProps = {
     images: ImageWithTag[];
     startAtIndex: number;
     closeGallery: () => void;
     preview: boolean;
+    deleteImage: (index: number) => void;
 }
 
 const ImageGallery = (props: ImageGalleryProps) => {
-    const [clientWidth, setClientWidth] = useState<number>(0);
     const [openInfoWindow, setOpenInfoWindow] = useState<boolean>(true);
     const [current, setCurrent] = useState<number>(props.startAtIndex);
 
@@ -95,10 +102,10 @@ const ImageGallery = (props: ImageGalleryProps) => {
     const closeGallery = () => {
         props.closeGallery();
     }
-
-    useEffect(() => {
-        setClientWidth(document.body.clientWidth);
-    }, [document.body.clientWidth])
+    const deleteImage = () => {
+        props.deleteImage(current);
+        closeGallery();
+    }
 
     return(
         props.preview ? <PreviewContainer>
@@ -110,8 +117,9 @@ const ImageGallery = (props: ImageGalleryProps) => {
             <GalleryImage previewMode={false} src={getImageAtIndex(current).path}/>
             {openInfoWindow &&  getImageAtIndex(current).message && <InformationWindow image={getImageAtIndex(current)}/>}
             {(current + 1) < props.images.length &&<GalleryButton left={false} src={GreaterThanWhite} onClick={nextElement}/>}
-            <InfoButton src={Comment} onClick={() => setOpenInfoWindow(!openInfoWindow)}/>
-            <AbortButton id="abortbutton" src={Abort} onClick={closeGallery}/>
+            {getImageAtIndex(current).message !== "" && <InfoButton src={Comment} onClick={() => setOpenInfoWindow(!openInfoWindow)}/>}
+            <AbortButton src={Abort} onClick={closeGallery}/>
+            <DeleteButton src={Trash} onClick={deleteImage}/>
         </GalleryContainer>
     );
 }

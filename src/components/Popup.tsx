@@ -101,7 +101,6 @@ const InputWrapper = styled.div`
     }
 `;
 
-
 type PopupProps = {
     closePopup: () => void;
     setImages: (data: ImageWithTag[]) => void;
@@ -123,20 +122,21 @@ const Popup = (props: PopupProps) => {
     const selectFile = (e: any) => {
         const uploadedFile = e.target.files[0];
         let reader = new FileReader();
-        reader.readAsDataURL(uploadedFile);
-        reader.onloadend = () => {
-            const newImage = {
-                url: reader.result as string,
-                name: "tmp",
-                type: "Image",
+        try{
+            reader.readAsDataURL(uploadedFile);
+            if(reader.error!== null) throw new Error("error reading from file");
+            reader.onloadend = () => {
+                const result: ImageWithTag = {
+                    path: reader.result as string,
+                    tags: [],
+                    message: ""
+                }
+                setImageToStore(result);
+                setPreviewMode(true);
             }
-            const result: ImageWithTag = {
-                path: newImage.url,
-                tags: [],
-                message: ""
-            }
-            setImageToStore(result);
-            setPreviewMode(true);
+        }
+        catch(Exception){
+            console.error(Exception + " " + reader.error);
         }
     }
     return(
@@ -153,7 +153,7 @@ const Popup = (props: PopupProps) => {
                 <CancelButton src={Cancel} onClick={() => props.closePopup()}/>
             </NoInputWrapper>}
             {previewMode && <InputWrapper id="inputwrapper">
-                <ImageGallery preview images={[imageToStore]} startAtIndex={0} closeGallery={() => setPreviewMode(false)}/>
+                <ImageGallery preview images={[imageToStore]} startAtIndex={0} closeGallery={() => setPreviewMode(false)} deleteImage={() => {}}/>
                 <EditWindow images={props.images} image={imageToStore} setImages={refreshImages} closePopup={props.closePopup}/>
                 <CancelUploadButton src={Cancel} onClick={() => props.closePopup()}/>
             </InputWrapper>}

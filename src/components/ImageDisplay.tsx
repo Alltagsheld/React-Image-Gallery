@@ -36,6 +36,7 @@ export type ImageDisplayProps = {
     images: ImageWithTag[];
     galleryOpen?: () => void;
     galleryClose?: () => void;
+    setImages?: (images: ImageWithTag[]) => void;
 }
 
 const ImageDisplay = (props: ImageDisplayProps) => {
@@ -53,16 +54,26 @@ const ImageDisplay = (props: ImageDisplayProps) => {
         if(props.galleryClose)props.galleryClose();
     }
 
+    const deleteImage = (index: number) => {
+        if(props.setImages){
+            console.log("in deleteImage");
+            const data: ImageWithTag[] = [...props.images];
+            console.log(data);
+            data.splice(index, 1);
+            console.log("data: " + data);
+            props.setImages(data);
+        }
+    }
+
     return(
         <DisplayWrapper>
             <AllImages blurred={fullscreenMode}>
                 {props.images && props.images.map((element, key) => {
-                    console.log(props.images);
                 return <BoxedImage index={key} key={key} imageWithTag={element} onClick={prepareFullscreenMode}/>
                 })}
             </AllImages>
             {fullscreenMode && <BackgroundImage src={Stripes}/>}
-            {fullscreenMode && <ImageGallery preview={false} startAtIndex={fullscreenAtIndex} images={props.images} closeGallery={endFullscreenMode}/>}
+            {fullscreenMode && <ImageGallery preview={false} startAtIndex={fullscreenAtIndex} images={props.images} deleteImage={deleteImage} closeGallery={endFullscreenMode}/>}
         </DisplayWrapper>
     );
 }

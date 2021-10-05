@@ -100,12 +100,16 @@ export const LandingPage = () => {
     const [galleryOpen, setGalleryOpen] = useState<boolean>(false);
     const [images, setImages] = useState<ImageWithTag[]>([]);
 
+    useEffect(() => {
+        console.log(images);
+    }, [images])
+
     return(
         <>
             <Blur isBlurred={popupActive}>
                 <Background/>
                 {!galleryOpen && <Image src={Abort} onClick={() => setPopupActive(true)}/>}
-                <ImageDisplay galleryClose={() => setGalleryOpen(false)}  galleryOpen={() => setGalleryOpen(true)} images={images}/>
+                <ImageDisplay galleryClose={() => setGalleryOpen(false)}  galleryOpen={() => setGalleryOpen(true)} images={images} setImages={(data: ImageWithTag[]) => setImages(data)}/>
             </Blur>
             {popupActive && <BackgroundImage src={Stripes}/>}
             {popupActive && !galleryOpen &&<Popup images={images} setImages={(data: ImageWithTag[]) => setImages(data)} closePopup={() => setPopupActive(false)}/>} 
