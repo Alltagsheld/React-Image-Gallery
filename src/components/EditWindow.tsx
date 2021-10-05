@@ -155,7 +155,7 @@ const SubmitContainer = styled.div`
 `;
 
 const Button = styled.button`
-    width: 30%;
+    width: 35%;
     border: 0;
     background-color: #f0f0f0;
     padding: 5px;
